@@ -53,7 +53,24 @@ export default defineComponent({
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker([this.latitute, this.longitude]).addTo(map);
+      const svgIcon = L.divIcon({
+        html: `
+      <svg
+        width="24"
+        height="40"
+        viewBox="0 0 100 100"
+        version="1.1"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M0 0 L50 100 L100 0 Z" fill="#7A8BE7"></path>
+      </svg>`,
+        className: "",
+        iconSize: [24, 40],
+        iconAnchor: [12, 40],
+      });
+
+      L.marker([this.latitute, this.longitude], { icon: svgIcon }).addTo(map);
 
       map.pm.addControls({
         position: 'topleft',
@@ -67,8 +84,14 @@ export default defineComponent({
         optionsControls: true,
         customControls: true,
         oneBlock: false,
-      }); 
+      });
 
+      map.pm.Toolbar.changeControlOrder([
+        "drawCircle",
+        "drawRectangle",
+        "removalMode",
+        "editMode",
+      ]);
     }
   },
   watch: {
@@ -82,3 +105,4 @@ export default defineComponent({
 });
 </script>
 
+<style
