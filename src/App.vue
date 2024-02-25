@@ -1,17 +1,18 @@
 <template>
-    <div class="container lg:flex md:flex mx-auto">
-      <CityInformation 
-          v-if="!isLoading"
-          :ipAddress=ipAddressData 
-          :city=cityData 
-          :country=countryData 
-          :countryCode=countryCodeData
-          :isp=ispData :region=regionData :timezone=timezoneData 
-        />
+  <div class="container lg:flex md:flex mx-auto">
+    <CityInformation v-if="!isLoading" 
+      :ipAddress=ipAddressData 
+      :city=cityData 
+      :country=countryData
+      :countryCode=countryCodeData 
+      :isp=ispData 
+      :timezone=timezoneData 
+      :zipcode=zipcodeData
+      :organization=organizationData 
+      :countryFlag=countryFlagData />
 
-      <Map :latitute=latituteData :longitude=longitudeData :isLoading=isLoading />
-    </div>
-
+    <Map :latitute=latituteData :longitude=longitudeData :isLoading=isLoading />
+  </div>
 </template>
 
 <script lang="ts">
@@ -24,6 +25,7 @@ export default defineComponent({
   data() {
     return {
       isLoading: false,
+      isError: false,
       ipAddressData: String,
       latituteData: Number,
       longitudeData: Number,
@@ -31,24 +33,38 @@ export default defineComponent({
       countryData: String,
       countryCodeData: String,
       ispData: String,
-      regionData: String,
-      timezoneData: String
+      timezoneData: String,
+      zipcodeData: String,
+      organizationData: String,
+      countryFlagData: String
+
     }
   },
   methods: {
     async getData() {
       this.isLoading = true
-      const result = await fetch("http://ip-api.com/json/");
-      const res = await result.json();
-      this.latituteData = res.lat
-      this.longitudeData = res.lon
-      this.ipAddressData = res.query
-      this.cityData = res.city
-      this.countryData = res.country
-      this.countryCodeData = res.countryCode
-      this.ispData = res.isp
-      this.regionData = res.regionName
-      this.timezoneData = res.timezone
+      try {
+        const response = await fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=${import.meta.env.VITE_API_GEOLOCATION}`)
+        const result = await response.json()
+
+        console.log('result.country_flag', result.country_flag)
+
+        this.latituteData = result.latitude
+        this.longitudeData = result.longitude
+        this.ipAddressData = result.ip
+        this.cityData = result.city
+        this.countryData = result.country_name
+        this.countryCodeData = result.country_code2
+        this.ispData = result.isp
+        this.timezoneData = result.time_zone.name
+        this.zipcodeData = result.zipcode
+        this.organizationData = result.organization
+        this.countryFlagData = result.country_flag
+
+      } catch (err) {
+        console.log(err)
+        this.isError= true
+      }
       this.isLoading = false
     }
   },

@@ -1,7 +1,13 @@
 ## Current City
 
 #### data source
-> http://ip-api.com/json/
+> https://api.ipgeolocation.io/getip
+
+#### setup .env
+
+```
+VITE_API_GEOLOCATION=<API-KEY>
+```
 
 #### running
 ```
