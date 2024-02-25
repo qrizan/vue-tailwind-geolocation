@@ -17,3 +17,6 @@ npm run dev
 ```
 #### screenshot
 ![Kanban Board](screenshot/current-city.png)
+
+#### demo
+https://vue-tailwind-geolocation.vercel.app/
